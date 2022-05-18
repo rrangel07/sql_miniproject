@@ -17,21 +17,21 @@ const db = mysql.createConnection(
     user: 'root',
     // TODO: Add MySQL password
     password: 'root',
-    database: 'movies_db'
+    database: 'movie_db'
   },
   console.log(`Connected to the books_db database.`)
 );
 
 // Query database
 
-let deletedRow = 2;
+// let deletedRow = 2;
 
-db.query(`DELETE FROM favorite_books WHERE id = ?`, deletedRow, (err, result) => {
-  if (err) {
-    console.log(err);
-  }
-  console.log(result);
-});
+// db.query(`DELETE FROM favorite_books WHERE id = ?`, deletedRow, (err, result) => {
+//   if (err) {
+//     console.log(err);
+//   }
+//   console.log(result);
+// });
 
 app.get('/api/movies',(req,res) => {
 
@@ -42,6 +42,17 @@ app.get('/api/movies',(req,res) => {
             data: results
         });
     })
+});
+
+app.get('/api/movie-reviews',(req,res) => {
+
+  db.query('SELECT movies.movie_name AS movie, reviews.review FROM reviews LEFT JOIN movies ON reviews.movie_id = movies.id ORDER BY movies.movie_name', function (err, results) {
+      if (err) res.status(500).json({ error: err.message });
+      res.json({
+          message: 'success',
+          data: results
+      });
+  })
 });
 
 // Default response for any other request (Not Found)
